@@ -1,0 +1,42 @@
+i2c:
+  sda: 5
+  scl: 4
+  scan: true
+  id: bus_a    
+
+gp8403:
+  id: my_gp8403
+  voltage: 10V    
+
+output:
+  - platform: gp8403
+    id: my_gp8403_output_1
+    gp8403_id: my_gp8403
+    channel: 0
+  - platform: gp8403
+    id: my_gp8403_output_2
+    gp8403_id: my_gp8403
+    channel: 1  
+
+switch:
+  - platform: gpio
+    pin:
+      number: 8
+    name: "Ventilation"    
+    inverted : true
+    icon: "mdi:fan"
+
+number:
+  - platform: template
+    name: "Air Flow"
+    id: "air_flow"
+    unit_of_measurement: "m³/h"
+    min_value: 50
+    max_value: 295
+    optimistic : true
+    step: 5  
+    icon: "mdi:fan"
+    on_value:
+      then:
+        - lambda: |-
+            id(my_gp8403_output_1).set_level( (x-50) / (295-50) );
