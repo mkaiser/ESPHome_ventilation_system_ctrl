@@ -1,12 +1,13 @@
+
 i2c:
   sda: 5
   scl: 4
   scan: true
-  id: bus_a    
+  id: bus_a
 
 gp8403:
   id: my_gp8403
-  voltage: 10V    
+  voltage: 10V
 
 output:
   - platform: gp8403
@@ -16,15 +17,20 @@ output:
   - platform: gp8403
     id: my_gp8403_output_2
     gp8403_id: my_gp8403
-    channel: 1  
+    channel: 1
 
 switch:
   - platform: gpio
     pin:
       number: 8
-    name: "Ventilation"    
-    inverted : true
+    name: "Ventilation"
+    inverted: true
     icon: "mdi:fan"
+    restore_mode: RESTORE_DEFAULT_ON
+
+# if you use my ESP32 CAN test PCB, you need to use the jumper array to route GPIO7 to TX LED
+status_led:
+  pin: GPIO7
 
 number:
   - platform: template
@@ -33,9 +39,11 @@ number:
     unit_of_measurement: "m³/h"
     min_value: 50
     max_value: 295
-    optimistic : true
-    step: 5  
+    optimistic: true
+    step: 5
     icon: "mdi:fan"
+    initial_value: 111
+    restore_value: true
     on_value:
       then:
         - lambda: |-
